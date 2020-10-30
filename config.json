@@ -1,0 +1,7 @@
+{
+    "maxPlayer": 10,
+    "firstFinish": true,
+    "internet": true,
+    "destinationInfo": true,
+    "fullPage": true
+}
