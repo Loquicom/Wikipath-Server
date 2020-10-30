@@ -1,28 +1,32 @@
-const iphex = require ('./src/helper/iphex');
-const Server = require('./src/server');
+// Import
+const constant = require('./constant');
+const file = require('./src/helper/file');
 
-const serv = new Server();
 
-serv.on('error', (err) => {
-    console.log(err.message);
-});
-serv.on('disconnection', (id) => {
-    console.log(`Client ${id} disconnected`);
-});
-serv.on('broken', (id) => {
-    console.log(`Connection with the client ${id} broken`);
-});
-serv.on('connection', (socket) => {
-    socket.send('hi', {id: socket.getId()});
-});
+// Main function
+async function main() {
+    // Load config
+    const config = getConfig();
+    if (!config) {
+        console.error('Unable to load the config file');
+        process.exit(9);
+    }
+}
 
-serv.action('hi', (data, socket) => {
-    console.log(data.msg);
-});
-serv.action('plouf', (data, socket) => {
-    socket.respond({plouf: 'noup'});
-});
+// Other functions
+function getConfig() {
+    // If file exist
+    if (file.exist('./config.json')) {
+        // Read file
+        return file.loadJson(constant.CONFIG_PATH);
+    } else {
+        // File not exist, create config file
+        if(!file.writeJson(constant.CONFIG_PATH, constant.DEFAULT_CONFIG)) {
+            return false;
+        }
+        return constant.DEFAULT_CONFIG;
+    }
+}
 
-serv.start((port) => {
-    console.log('Server started on port ' + port);
-});
+// Launch main function
+main();

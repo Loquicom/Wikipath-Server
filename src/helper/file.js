@@ -151,6 +151,7 @@ module.exports.writeJson = function (path, content, verbose = false) {
         }
         return false;
     }
+    return true;
 }
 
 module.exports.system = fs;
