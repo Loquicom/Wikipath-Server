@@ -1,7 +1,7 @@
 {
     "maxPlayer": 10,
     "firstFinish": true,
-    "internet": true,
+    "internet": false,
     "destinationInfo": true,
     "fullPage": true
 }

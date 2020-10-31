@@ -8,8 +8,12 @@
   },
   "author": "Loquicom",
   "license": "ISC",
-  "engines" : { "node" : ">=12" },
+  "engines": {
+    "node": ">=12"
+  },
   "dependencies": {
+    "cli-progress": "^3.8.2",
+    "colors": "^1.4.0",
     "follow-redirects": "^1.13.0",
     "nat-upnp-2": "^3.0.3",
     "portfinder": "^1.0.28",
