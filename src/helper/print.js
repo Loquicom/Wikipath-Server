@@ -21,7 +21,7 @@ function fatal(str) {
 }
 
 function important(str) {
-    console.info(' ==>'.bold.magenta, str.bold, '<== '.bold.magenta);
+    console.info('  ==>'.bold.magenta, str.bold, '<==  '.bold.magenta);
 }
     
 function list(it, space = 2) {

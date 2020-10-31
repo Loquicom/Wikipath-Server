@@ -101,6 +101,10 @@ class Server {
         }
     }
 
+    getNumberOfClients() {
+        return this.#clients.length;
+    }
+
     _disconnectedClient() {
         // 10s interval to find disconneted clients
         this.#interval.disconnected = setInterval(() => {

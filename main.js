@@ -11,7 +11,7 @@ const server = require('./src/gameServer');
 process.on('SIGINT', stop);
 
 // Variable
-let config = null
+global.config = null
 
 // Main functions
 async function main() {
