@@ -1,4 +1,5 @@
 // Import
+const constant = require('../constant');
 const serverFactory = require('./server');
 const print = require('./helper/print');
 
@@ -6,6 +7,7 @@ const print = require('./helper/print');
 const server = serverFactory.createServer();
 // Create variables
 const player = {};
+let inGame = false;
 let finish = 0;
 
 // Configure event on server
@@ -13,9 +15,16 @@ function setupEvent() {
     // New player connection
     server.on('connection', (socket) => {
         print.info(`New player with id: ${socket.getId()}`);
+        // Check if game is launch
+        if (inGame) {
+            print.info(`Game already launch, disconnection player ${socket.getId()}`);
+            socket.send('error', constant.ERROR.IN_GAME);
+            socket.close();
+        }
         // Check if server is full
         if (server.getNumberOfClients() >= config.maxPlayer) {
             print.info(`Server is full, disconnection player ${socket.getId()}`);
+            socket.send('error', constant.ERROR.SERVER_FULL);
             socket.close();
         }
         // Send config information
@@ -63,7 +72,16 @@ function setupAction() {
     });
     // Default action
     server.action('default', (data, socket) => {
-
+        // Unknow action, close connection
+        if (player[id] === undefined) {
+            print.info(`Unknown command from player ${id}, disconnection`);
+        } else {
+            print.info(`Unknown command from ${player[id].pseudo} (player ${id}), disconnection`);
+            delete player[id];
+        }
+        // Send error message before closing the connection
+        socket.send('error', constant.ERROR.UNKNOWN_COMMAND);
+        socket.close();
     });
 }
 
@@ -72,7 +90,9 @@ module.exports.start = function() {
     // Setup server
     setupEvent();
     setupAction();
-    console.log('start');
+    server.start(() => {
+        print.info('Server started');
+    });
 };
 
 module.exports.stop = function() {

@@ -17,11 +17,13 @@ global.config = null
 async function main() {
     print.title(`Wikipath Server (Ver ${constant.VERSION})`);
     // Load config
+    print.info('Loading config file');
     config = getConfig();
     if (!config) {
         console.error('Unable to load the config file');
         process.exit(9);
     }
+    print.info('Config file loaded');
     // Check port
     print.info('Checking port');
     if (!portIsAvailable(constant.PORT)) {
@@ -63,6 +65,7 @@ function getConfig() {
         return file.loadJson(constant.CONFIG_PATH);
     } else {
         // File not exist, create config file
+        print.info('Config file not found, generation of a new config file');
         if(!file.writeJson(constant.CONFIG_PATH, constant.DEFAULT_CONFIG)) {
             return false;
         }
@@ -101,7 +104,7 @@ async function onlineGame() {
     const ip = await nat.getExternalIp();
     if (!ip) {
         print.warn('Unable to generate code');
-        print.info('Use your external ip to connect to the servers (you can find it in IPv4 on https://www.whatismyip.com)');
+        print.info('Use your external ip to connect to the server (you can find it in IPv4 on https://www.whatismyip.com)');
         return false;
     }
     // Generate code
