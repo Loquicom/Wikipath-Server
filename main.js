@@ -26,7 +26,8 @@ async function main() {
     print.info('Config file loaded');
     // Check port
     print.info('Checking port');
-    if (!portIsAvailable(constant.PORT)) {
+    const portAvailable = await portIsAvailable(constant.PORT);
+    if (!portAvailable) {
         print.fatal('Error unable to start server');
         process.exit(5);
     }

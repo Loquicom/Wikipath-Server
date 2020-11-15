@@ -4,7 +4,7 @@ const serverFactory = require('./server');
 const print = require('./helper/print');
 
 // Instantiate server
-const server = serverFactory.createServer();
+const server = serverFactory.createServer(constant.PORT);
 // Create variables
 const player = {};
 let inGame = false;
@@ -17,13 +17,13 @@ function setupEvent() {
         print.info(`New player with id: ${socket.getId()}`);
         // Check if game is launch
         if (inGame) {
-            print.info(`Game already launch, disconnection player ${socket.getId()}`);
+            print.info(`Game already launch, player ${socket.getId()} disconnects`);
             socket.send('error', constant.ERROR.IN_GAME);
             socket.close();
         }
         // Check if server is full
         if (server.getNumberOfClients() >= config.maxPlayer) {
-            print.info(`Server is full, disconnection player ${socket.getId()}`);
+            print.info(`Server is full, player ${socket.getId()} disconnects`);
             socket.send('error', constant.ERROR.SERVER_FULL);
             socket.close();
         }
@@ -61,6 +61,7 @@ function setupAction() {
         player[socket.getId()] = {
             pseudo: data.pseudo,
         };
+        print.info(`Player ${socket.getId()} pseudo is ${data.pseudo}`);
     });
     // Player ready to start
     server.action('ready', (data, socket) => {
