@@ -91,6 +91,15 @@ class Server {
         });
     }
 
+    clientDisconnect(clientId) {
+        const index = this.#clients.indexOf(clientId);
+        if (index === -1) {
+            return false;
+        }
+        this.#clients.splice(index, 1);
+        return true;
+    }
+
     stop(callback = null) {
         this._isStarted();
         // Close server
@@ -109,7 +118,7 @@ class Server {
         // 10s interval to find disconneted clients
         this.#interval.disconnected = setInterval(() => {
             // Check if the number of client is different between WebSocketServer and cache
-            if (this.#clients.length === this.#wss.clients.size) {
+            if (this.#clients.length <= this.#wss.clients.size) {
                 return false;
             }
             // Find who is disconnected

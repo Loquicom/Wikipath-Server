@@ -63,6 +63,12 @@ function setupAction() {
         };
         print.info(`Player ${socket.getId()} pseudo is ${data.pseudo}`);
     });
+    // Player quit the game
+    server.action('quit', (data, socket) => {
+        server.clientDisconnect(socket.getId());
+        print.info(`${player[socket.getId()].pseudo} (player ${socket.getId()}) leave the game`);
+        delete player[socket.getId()];
+    });
     // Player ready to start
     server.action('ready', (data, socket) => {
         
