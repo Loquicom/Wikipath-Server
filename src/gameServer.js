@@ -27,8 +27,6 @@ function setupEvent() {
             socket.send('error', constant.ERROR.SERVER_FULL);
             socket.close();
         }
-        // Send config information
-        socket.send('config', config);
     });
     // Disconection
     server.on('disconnection', (id) => {
@@ -58,13 +56,23 @@ function setupEvent() {
 function setupAction() {
     // Player register pseudo
     server.action('register', (data, socket) => {
+        // Send config information
+        socket.send('config', config);
+        // Register
         player[socket.getId()] = {
             pseudo: data.pseudo,
         };
         print.info(`Player ${socket.getId()} pseudo is ${data.pseudo}`);
+        // Send informations about all players
+        socket.respond(player);
+        // Alert other players
+        socket.broadcastOther('new-player', {id: socket.getId(), pseudo: data.pseudo});
     });
     // Player quit the game
     server.action('quit', (data, socket) => {
+        // Inform other players
+        socket.broadcastOther('player-quit', {id: socket.getId()});
+        // Disconnect
         server.clientDisconnect(socket.getId());
         print.info(`${player[socket.getId()].pseudo} (player ${socket.getId()}) leave the game`);
         delete player[socket.getId()];
