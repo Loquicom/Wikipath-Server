@@ -1,6 +1,7 @@
 const constant = {
     VERSION: '1.0.0',
     DEFAULT_CONFIG: {
+        name: "Wikipath Server",
         maxPlayer: 10,
         firstFinish: true,
         internet: true,

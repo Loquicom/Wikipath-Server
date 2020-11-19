@@ -60,7 +60,9 @@ function setupAction() {
         socket.send('config', config);
         // Register
         player[socket.getId()] = {
+            id: socket.getId(),
             pseudo: data.pseudo,
+            ready: false
         };
         print.info(`Player ${socket.getId()} pseudo is ${data.pseudo}`);
         // Send informations about all players
