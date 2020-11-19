@@ -47,7 +47,7 @@ class Server {
             // Add variable to detect broken connection
             ws.isAlive = true;
             ws.on('pong', () => {
-                this.isAlive = true;
+                ws.isAlive = true;
             });
             // Handle message receive from client
             ws.on('message', (msg) => {
