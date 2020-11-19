@@ -65,10 +65,13 @@ function setupAction() {
             ready: false
         };
         print.info(`Player ${socket.getId()} pseudo is ${data.pseudo}`);
-        // Send informations about all players
-        socket.respond(player);
-        // Alert other players
-        socket.broadcastOther('new-player', {id: socket.getId(), pseudo: data.pseudo});
+        // Send informations about all players and alert other players
+        const newPlayer = {
+            id: socket.getId(),
+            pseudo: data.pseudo,
+        };
+        socket.respond({players: player, self: newPlayer});
+        socket.broadcastOther('new-player', newPlayer);
     });
     // Player quit the game
     server.action('quit', (data, socket) => {
