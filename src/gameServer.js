@@ -10,6 +10,26 @@ const player = {};
 let inGame = false;
 let finish = 0;
 
+// Utility functions
+function playersReady(players) {
+    for(let playerId in players) {
+        const p = player[playerId];
+        if (!p.ready) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function play() {
+    // Server enter in in-game mode
+    inGame = true;
+    // Get the start and end wikipedia page
+    // TODO
+    // Send informations to all players
+    server.broadcast('play', {});
+}
+
 // Configure event on server
 function setupEvent() {
     // New player connection
@@ -84,7 +104,18 @@ function setupAction() {
     });
     // Player ready to start
     server.action('ready', (data, socket) => {
-        
+        player[socket.getId()].ready = true;
+        // Alert other players
+        socket.broadcastOther('player-ready', {id: socket.getId()});
+        // Check if all players are ready
+        if (playersReady(player)) {
+            play();
+        }
+    });
+    server.action('unready', (data, socket) => {
+        player[socket.getId()].ready = false;
+        // Alert other players
+        socket.broadcastOther('player-unready', {id: socket.getId()});
     });
     // Player find a path
     server.action('finish', (data, socket) => {
