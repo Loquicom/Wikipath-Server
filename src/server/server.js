@@ -86,7 +86,7 @@ class Server {
         // Send to each client
         this.#wss.clients.forEach(function each(client) {
             if (client !== exclude && client.readyState === WebSocket.OPEN) {
-              client.send(JSON.stringify({action: action, data: data}));
+                client.send(JSON.stringify({action: action, data: data}));
             }
         });
     }
@@ -102,6 +102,8 @@ class Server {
 
     stop(callback = null) {
         this._isStarted();
+        // Alert all sockets
+        this.broadcast('#system.server.stop');
         // Close server
         this.#wss.close();
         // Callback
