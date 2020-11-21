@@ -1,4 +1,5 @@
 // Import
+const events = require('events');
 const portfinder = require('portfinder');
 const constant = require('./constant');
 const file = require('./src/helper/file');
@@ -11,7 +12,8 @@ const server = require('./src/gameServer');
 process.on('SIGINT', stop);
 
 // Variable
-global.config = null
+global.config = null;
+global.wikipathServerEvent = new events.EventEmitter();
 
 // Main functions
 async function main() {
@@ -120,6 +122,11 @@ function localGame() {
     print.info('The internal ip is one of these:');
     print.list(nat.getInternalIps());
 }
+
+// Events
+wikipathServerEvent.on('stop', () => {
+    stop();
+});
 
 // Launch main function
 main();

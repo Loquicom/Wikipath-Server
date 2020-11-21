@@ -1,6 +1,6 @@
 {
     "name": "Wikipath server",
-    "lang": "fr",
+    "lang": "en",
     "maxPlayer": 10,
     "firstFinish": true,
     "internet": true,

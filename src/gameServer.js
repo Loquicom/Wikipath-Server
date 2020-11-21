@@ -1,7 +1,8 @@
 // Import
+const print = require('./helper/print');
 const constant = require('../constant');
 const serverFactory = require('./server');
-const print = require('./helper/print');
+const wikipedia = require('./wikipedia');
 
 // Instantiate server
 const server = serverFactory.createServer(constant.PORT);
@@ -21,11 +22,24 @@ function playersReady(players) {
     return true;
 }
 
-function play() {
+async function play() {
     // Server enter in in-game mode
     inGame = true;
     // Get the start and end wikipedia page
-    // TODO
+    let startPage;
+    let endPage;
+    wikipedia.setLang(config.lang);
+    try {
+        startPage = await wikipedia.getRandomPage();
+        endPage = await wikipedia.getRandomPage();
+    } catch (err) {
+        print.error('Unable to retrieve wikipedia pages');
+        print.error('Error: ' + err.message);
+        wikipathServerEvent.emit('stop');
+        return;
+    }
+    console.log(startPage);
+    console.log(endPage);
     // Send informations to all players
     server.broadcast('play', {});
 }
@@ -147,5 +161,5 @@ module.exports.start = function() {
 };
 
 module.exports.stop = function() {
-
+    server.stop();
 };
