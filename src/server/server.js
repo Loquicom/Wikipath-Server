@@ -2,6 +2,8 @@
 const WebSocket = require('ws');
 const Socket = require('./socket');
 
+const DEFAULT_PORT = 8080;
+
 // Server class
 class Server {
 
@@ -9,13 +11,15 @@ class Server {
     #clients = [];
     #nextId = 1;
     #port;
+    #protocolVersion;
     #wss = null;
     #event = {};
     #action = {};
     #interval = {};
 
-    constructor(port = 8080) {
-        this.#port = port;
+    constructor(port = null, protocolVersion = 1) {
+        this.#port = port ? port : DEFAULT_PORT;
+        this.#protocolVersion = protocolVersion;
     }
 
     on(event, callback) {
@@ -60,9 +64,11 @@ class Server {
                     action(data.data, new Socket(this, ws, data.action));
                 }
             });
-            // Event connection
+            // Send version and trigger event connection
+            const socket = new Socket(this, ws);
+            socket.send('#system.server.protocol', {protocol: this.#protocolVersion});
             if (typeof this.#event.connection === 'function') {
-                this.#event.connection(new Socket(this, ws));
+                this.#event.connection(socket);
             }
         });
         // Clear interval when server close

@@ -5,7 +5,7 @@ const serverFactory = require('./server');
 const wikipedia = require('./wikipedia');
 
 // Instantiate server
-const server = serverFactory.createServer(constant.PORT);
+const server = serverFactory.createServer(constant.PORT, constant.PROTOCOL_VERSION);
 // Create variables
 const player = {};
 let inGame = false;

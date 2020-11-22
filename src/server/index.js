@@ -1,11 +1,11 @@
 const Server = require('./server');
 let serv = null;
 
-module.exports.createServer = function(port = null) {
-    if (port !== null) {
-        serv = new Server(port);
+module.exports.createServer = function(port = null, protocoleVersion = null) {
+    if (protocoleVersion !== null) {
+        serv = new Server(port, protocoleVersion);
     } else {
-        serv = new Server();
+        serv = new Server(port);
     }
     return serv;
 };
