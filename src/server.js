@@ -1,11 +1,11 @@
 // Import
 const print = require('./helper/print');
 const constant = require('../constant');
-const serverFactory = require('./server');
+const Server = require('./wsa/server');
 const wikipedia = require('./wikipedia');
 
 // Instantiate server
-const server = serverFactory.createServer(constant.PORT, constant.PROTOCOL_VERSION);
+const server = new Server(constant.PORT, constant.PROTOCOL_VERSION);
 // Create variables
 const player = {};
 let inGame = false;

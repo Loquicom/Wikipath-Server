@@ -6,7 +6,7 @@ const file = require('./src/helper/file');
 const print = require('./src/helper/print');
 const iphex = require('./src/helper/iphex');
 const nat = require('./src/nat');
-const server = require('./src/gameServer');
+const server = require('./src/server');
 
 // Handle signal
 process.on('SIGINT', stop);
