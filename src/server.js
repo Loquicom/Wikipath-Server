@@ -44,6 +44,22 @@ async function play() {
     server.broadcast('play', {});
 }
 
+function checkGameStatus() {
+    if (Object.keys(player).length === 0) {
+        // No remaining player, reset game
+        print.info('No remaining player');
+        reset();
+    } else {
+        // Test if game is end
+        // TODO
+    }
+}
+
+function reset() {
+    print.info('Reset game');
+    inGame = false;
+}
+
 // Configure event on server
 function setupEvent() {
     // New player connection
@@ -70,6 +86,7 @@ function setupEvent() {
             print.info(`${player[id].pseudo} (player ${id}) disconnected`);
             delete player[id];
         }
+        checkGameStatus();
     });
     // Broken connection
     server.on('broken', (id) => {
@@ -79,6 +96,7 @@ function setupEvent() {
             print.info(`Connection with ${player[id].pseudo} (player ${id}) lost`);
             delete player[id];
         }
+        checkGameStatus();
     });
     // Error
     server.on('error', (error) => {
@@ -115,6 +133,7 @@ function setupAction() {
         server.clientDisconnect(socket.getId());
         print.info(`${player[socket.getId()].pseudo} (player ${socket.getId()}) leave the game`);
         delete player[socket.getId()];
+        checkGameStatus();
     });
     // Player ready to start
     server.action('ready', (data, socket) => {
