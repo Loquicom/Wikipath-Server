@@ -56,6 +56,7 @@ function stop() {
     if (config.nat) {
         print.info('Closing port');
         nat.closePort(constant.PORT);
+        clearInterval(natInterval);
     }
     // End
     print.info('Server stop');
