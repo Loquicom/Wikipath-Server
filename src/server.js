@@ -38,10 +38,8 @@ async function play() {
         wikipathServerEvent.emit('stop');
         return;
     }
-    console.log(startPage);
-    console.log(endPage);
     // Send informations to all players
-    server.broadcast('play', {});
+    server.broadcast('play', {start: startPage, end: endPage});
 }
 
 function checkGameStatus() {
