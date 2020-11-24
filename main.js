@@ -38,20 +38,21 @@ async function main() {
     print.info('Starting server');
     server.start();
     // Start the correct mode
-    if (config.internet) {
-        print.info('Starting online game');
-        await onlineGame();
-    } else {
-        print.info('Starting local game');
-        localGame();
+    let natEnabled = false;
+    if (config.nat) {
+        print.info('Open port');
+        natEnabled = await enableNat();
     }
+    print.info('Generating code');
+    await generateCode(natEnabled);
+    print.info('Server is started');
 }
 
 function stop() {
     print.info('Stopping server');
     server.stop();
     // Close port in it is an online game
-    if (config.internet) {
+    if (config.nat) {
         print.info('Closing port');
         nat.closePort(constant.PORT);
     }
@@ -90,37 +91,60 @@ async function portIsAvailable(port) {
     return true
 }
 
-async function onlineGame() {
+async function enableNat() {
     const isOpen = await nat.openPort(constant.PORT, constant.TTL);
     // Fail
     if(!isOpen) {
-        print.warn('Impossible to activate the online game, only the local game is available');
-        config.internet = false;
-        print.info('Starting local game');
-        localGame();
+        print.warn('Unable to open port');
+        config.nat = false;
         return false;
     }
     // Success
-    print.info('Online game enabled');
-    // Get external IP
-    print.info('Generating online code');
-    const ip = await nat.getExternalIp();
+    print.info('Port opened');
+    return true;
+}
+
+async function getIp(natEnabled) {
+    // Get external IP if nat is enabled
+    if (natEnabled) {
+        print.info('Retrieving the IP');
+        const ip = await nat.getExternalIp();
+        if (ip) {
+            return ip;
+        }
+        print.warn('Unable to retrieving the IP');
+    }
+    // Get ip from the config file
+    print.info('Get IP from config file');
+    return config.ip;
+}
+
+async function generateCode(natEnabled) {
+    // Get ip
+    const ip = await getIp(natEnabled);
+    // Show information
+    print.info('You can connect with the code or an IP');
+    if (natEnabled) {
+        print.info('You can use one of yours internals (local) IP or your external IP');
+        if (ip) {
+            print.info(`Your external IP is ${ip}`);
+        } else {
+            print.info('You can find your external IP in IPv4 on https://www.whatismyip.com');
+        }
+    } else {
+        print.info('You can use one of yours internals (local) IP');
+    }
+    print.info('Yours internals IP are:');
+    print.list(nat.getInternalIps());
+    // Generate code
     if (!ip) {
-        print.warn('Unable to generate code');
-        print.info('Use your external ip to connect to the server (you can find it in IPv4 on https://www.whatismyip.com)');
+        print.warn('Unable to generate code, no IP');
         return false;
     }
-    // Generate code
     const code = iphex.encode(ip);
     print.info('Your code is:');
     print.important(code);
     return code;
-}
-
-function localGame() {
-    print.info('Use the internal ip of the server to connect')
-    print.info('The internal ip is one of these:');
-    print.list(nat.getInternalIps());
 }
 
 // Events

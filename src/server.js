@@ -173,7 +173,7 @@ module.exports.start = function() {
     setupEvent();
     setupAction();
     server.start(() => {
-        print.info('Server started');
+        print.info('Server ready');
     });
 };
 
