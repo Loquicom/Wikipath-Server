@@ -14,6 +14,7 @@ process.on('SIGINT', stop);
 // Variable
 global.config = null;
 global.wikipathServerEvent = new events.EventEmitter();
+let natInterval = null;
 
 // Main functions
 async function main() {
@@ -99,6 +100,17 @@ async function enableNat() {
         config.nat = false;
         return false;
     }
+    // Interval to reopen port after TTL
+    natInterval = setInterval(async function() {
+        print.info('Open port TTL expired, re-open')
+        const isSuccess = await nat.openPort(constant.PORT, constant.TTL);
+        if(!isSuccess) {
+            print.warn('Unable to re-open port');
+            stop();
+            return;
+        }
+        print.info('Port re-opened')
+    }, (constant.TTL * 1000) - 1000);
     // Success
     print.info('Port opened');
     return true;
