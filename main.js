@@ -52,7 +52,7 @@ async function main() {
 function stop() {
     print.info('Stopping server');
     server.stop();
-    // Close port in it is an online game
+    // Close port if it is an online game
     if (config.nat) {
         print.info('Closing port');
         nat.closePort(constant.PORT);
