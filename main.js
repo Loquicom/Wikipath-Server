@@ -59,7 +59,7 @@ function stop() {
         clearInterval(natInterval);
     }
     // End
-    print.info('Server stop');
+    print.info('Server stopped');
     process.exit();
 }
 
