@@ -25,6 +25,7 @@ function playersReady(players) {
 async function play() {
     // Server enter in in-game mode
     inGame = true;
+    server.broadcast('loading-game');
     // Get the start and end wikipedia page
     let startPage;
     let endPage;
