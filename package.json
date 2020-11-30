@@ -24,7 +24,8 @@
     "ws": "^7.3.1"
   },
   "devDependencies": {
-    "github-release": "^0.2.0",
+    "@babel/runtime": "^7.0.0",
+    "github-release-cli": "^2.0.0",
     "pkg": "^4.4.9"
   }
 }
