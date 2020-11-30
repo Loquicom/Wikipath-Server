@@ -1,13 +1,16 @@
 {
   "name": "wikipath-server",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js"
+    "start": "node main.js",
+    "windows": "pkg -o dist/wikipath-server -t node12-win-x64 main.js",
+    "linux": "pkg -o dist/wikipath-server -t node12-linux-x64 main.js",
+    "build": "yarn windows && yarn linux"
   },
   "author": "Loquicom",
-  "license": "ISC",
+  "license": "MIT",
   "engines": {
     "node": ">=12"
   },
@@ -19,5 +22,8 @@
     "nat-upnp-2": "^3.0.3",
     "portfinder": "^1.0.28",
     "ws": "^7.3.1"
+  },
+  "devDependencies": {
+    "github-release": "^0.2.0"
   }
 }

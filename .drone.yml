@@ -1,0 +1,29 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: build
+  image: node
+  commands:
+  - yarn
+  - yarn build
+  when:
+    branch:
+    - master
+
+- name: release
+  image: node
+  environment:
+    GITHUB_TOKEN:
+      from_secret: github_token
+  commands:
+  - export PROJECT_VERSION=$(node -p "require('./package.json').version")
+  - yarn github-release upload --owner Loquicom --repo Wikipath-Server --tag $PROJECT_VERSION --release-name $PROJECT_VERSION "dist/wikipath-server" "dist/wikipath-server.exe"
+  when:
+    branch:
+    - master
+
+trigger:
+  event:
+  - push  
