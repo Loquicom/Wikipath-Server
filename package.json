@@ -5,8 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
-    "windows": "pkg -o dist/wikipath-server -t node12-win-x64 main.js",
-    "linux": "pkg -o dist/wikipath-server -t node12-linux-x64 main.js",
+    "windows": "pkg -o dist/wikipath-server-win-x64 -t node12-win-x64 main.js",
+    "linux": "pkg -o dist/wikipath-server-linux-x64 -t node12-linux-x64 main.js",
     "build": "yarn windows && yarn linux"
   },
   "author": "Loquicom",
