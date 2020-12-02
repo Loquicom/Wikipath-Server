@@ -9,13 +9,23 @@ const server = new Server(constant.PORT, constant.PROTOCOL_VERSION);
 // Create variables
 const player = {};
 let inGame = false;
-let finish = 0;
+let finisher = [];
 
 // Utility functions
 function playersReady(players) {
     for(let playerId in players) {
         const p = player[playerId];
         if (!p.ready) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function gameIsOver(players) {
+    for(let playerId in players) {
+        const p = player[playerId];
+        if (!p.finish) {
             return false;
         }
     }
@@ -44,19 +54,44 @@ async function play() {
 }
 
 function checkGameStatus() {
-    if (Object.keys(player).length === 0) {
-        // No remaining player, reset game
-        print.info('No remaining player');
-        reset();
-    } else {
-        // Test if game is end
-        // TODO
+    if (inGame) {
+        if (Object.keys(player).length === 0) {
+            // No remaining player, reset game
+            print.info('No remaining player');
+            reset();
+        } else if (gameIsOver(player)) {
+            // Game is over with the remaining players
+            endGame();
+            reset();
+        }
     }
+}
+
+function endGame() {
+    print.info('End game');
+    // Generate result array
+    const result = [];
+    for(let i = 0; i < finisher.length; i++) {
+        const p = player[finisher[i]];
+        result.push({
+            pseudo: p.pseudo,
+            pos: (i + 1),
+            history: p.history
+        });
+    }
+    // Broadcast result to all players
+    server.broadcast('result', result);
 }
 
 function reset() {
     print.info('Reset game');
     inGame = false;
+    finisher = [];
+    for(let playerId in player) {
+        player[playerId].ready = false;
+        player[playerId].finish = false;
+        player[playerId].history = null;
+    }
 }
 
 // Configure event on server
@@ -113,7 +148,9 @@ function setupAction() {
         player[socket.getId()] = {
             id: socket.getId(),
             pseudo: data.pseudo,
-            ready: false
+            ready: false,
+            finish: false,
+            history: null
         };
         print.info(`Player ${socket.getId()} pseudo is ${data.pseudo}`);
         // Send informations about all players and alert other players
@@ -141,6 +178,7 @@ function setupAction() {
         socket.broadcastOther('player-ready', {id: socket.getId()});
         // Check if all players are ready
         if (playersReady(player)) {
+            print.info(`Game started with ${Object.keys(player).length} player(s)`);
             play();
         }
     });
@@ -151,7 +189,21 @@ function setupAction() {
     });
     // Player find a path
     server.action('finish', (data, socket) => {
-
+        finisher.push(socket.getId());
+        print.info(`${player[socket.getId()].pseudo} (player ${socket.getId()}) find a path, ranked: ${finisher.length}`);
+        // Add information
+        player[socket.getId()].finish = true;
+        player[socket.getId()].history = data.history;
+        // Check if the game is over
+        let over = true;
+        if (!config.firstFinish) {
+            over = gameIsOver(player);
+        }
+        // If game is over send result and reset the game
+        if (over) {
+            endGame();
+            reset();
+        }
     });
     // Default action
     server.action('default', (data, socket) => {
