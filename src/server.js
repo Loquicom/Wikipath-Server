@@ -23,13 +23,14 @@ function playersReady(players) {
 }
 
 function gameIsOver(players) {
+    let nbFinish = 0;
     for(let playerId in players) {
         const p = player[playerId];
-        if (!p.finish) {
-            return false;
+        if (p.finish) {
+            nbFinish++;
         }
     }
-    return true;
+    return nbFinish >= Object.keys(players).length - 1;
 }
 
 async function play() {
