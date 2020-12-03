@@ -19,7 +19,7 @@ steps:
       from_secret: github_token
   commands:
   - export PROJECT_VERSION=$(node -p "require('./package.json').version")
-  - yarn github-release upload --owner Loquicom --repo Wikipath-Server --tag $PROJECT_VERSION --release-name $PROJECT_VERSION "dist/wikipath-server-linux-x64" "dist/wikipath-server-win-x64.exe"
+  - yarn github-release upload --owner Loquicom --repo Wikipath-Server --prerelease true --tag $PROJECT_VERSION --release-name $PROJECT_VERSION "dist/wikipath-server-linux-x64" "dist/wikipath-server-win-x64.exe"
   when:
     branch:
     - master
