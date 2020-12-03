@@ -12,6 +12,19 @@ let inGame = false;
 let finisher = [];
 
 // Utility functions
+function limitPlayersInfo(players) {
+    const playerInfo = {};
+    for(let playerId in players) {
+        const p = player[playerId];
+        playerInfo[playerId] = {
+            id: p.id,
+            pseudo: p.pseudo,
+            ready: p.ready
+        }
+    }
+    return playerInfo;
+}
+
 function playersReady(players) {
     for(let playerId in players) {
         const p = player[playerId];
@@ -20,17 +33,6 @@ function playersReady(players) {
         }
     }
     return true;
-}
-
-function gameIsOver(players) {
-    let nbFinish = 0;
-    for(let playerId in players) {
-        const p = player[playerId];
-        if (p.finish) {
-            nbFinish++;
-        }
-    }
-    return nbFinish >= Object.keys(players).length - 1;
 }
 
 async function play() {
@@ -52,6 +54,21 @@ async function play() {
     }
     // Send informations to all players
     server.broadcast('play', {start: startPage, end: endPage});
+}
+
+function gameIsOver(players) {
+    let nbFinish = 0;
+    for(let playerId in players) {
+        const p = player[playerId];
+        if (p.finish) {
+            nbFinish++;
+        }
+    }
+    if (config.firstFinish) {
+        return nbFinish > 0
+    } else {
+        return nbFinish != 0 && nbFinish >= Object.keys(players).length - 1;
+    }
 }
 
 function checkGameStatus() {
@@ -121,6 +138,8 @@ function setupEvent() {
             print.info(`${player[id].pseudo} (player ${id}) disconnected`);
             delete player[id];
         }
+        // Inform other players and check game status
+        server.broadcast('player-quit', {id: id});
         checkGameStatus();
     });
     // Broken connection
@@ -131,6 +150,8 @@ function setupEvent() {
             print.info(`Connection with ${player[id].pseudo} (player ${id}) lost`);
             delete player[id];
         }
+        // Inform other players and check game status
+        server.broadcast('player-quit', {id: id});
         checkGameStatus();
     });
     // Error
@@ -159,7 +180,7 @@ function setupAction() {
             id: socket.getId(),
             pseudo: data.pseudo,
         };
-        socket.respond({players: player, self: newPlayer});
+        socket.respond({players: limitPlayersInfo(player), self: newPlayer});
         socket.broadcastOther('new-player', newPlayer);
     });
     // Player quit the game
@@ -205,6 +226,10 @@ function setupAction() {
             endGame();
             reset();
         }
+    });
+    // Send players info
+    server.action('players-info', (data, socket) => {
+        socket.respond({players: limitPlayersInfo(player)});
     });
     // Default action
     server.action('default', (data, socket) => {
