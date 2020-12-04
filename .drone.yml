@@ -19,7 +19,8 @@ steps:
       from_secret: github_token
   commands:
   - export PROJECT_VERSION=$(node -p "require('./package.json').version")
-  - yarn github-release upload --owner Loquicom --repo Wikipath-Server --prerelease true --tag $PROJECT_VERSION --release-name $PROJECT_VERSION "dist/wikipath-server-linux-x64" "dist/wikipath-server-win-x64.exe"
+  - export IS_PRERELEASE=$(node -p "require('./package.json').version.split('.')[0] < 1")
+  - yarn github-release upload --owner Loquicom --repo Wikipath-Server --prerelease $IS_PRERELEASE --tag $PROJECT_VERSION --release-name $PROJECT_VERSION "dist/wikipath-server-linux-x64" "dist/wikipath-server-win-x64.exe"
   when:
     branch:
     - master
