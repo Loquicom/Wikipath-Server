@@ -1,6 +1,7 @@
 // Import
 const events = require('events');
 const portfinder = require('portfinder');
+const keypress = require('keypress');
 const constant = require('./constant');
 const file = require('./src/helper/file');
 const print = require('./src/helper/print');
@@ -15,6 +16,7 @@ process.on('SIGINT', stop);
 global.config = null;
 global.wikipathServerEvent = new events.EventEmitter();
 let natInterval = null;
+const devMode = process.argv.length > 2 && process.argv[2] === '--dev';
 
 // Main functions
 async function main() {
@@ -47,6 +49,7 @@ async function main() {
     print.info('Generating code');
     await generateCode(natEnabled);
     print.info('Server is started');
+    print.info('Stop server with Ctrl+C or Cmd+.');
 }
 
 function stop() {
@@ -60,7 +63,19 @@ function stop() {
     }
     // End
     print.info('Server stopped');
-    process.exit();
+    // Check if dev mode is enabled
+    if (devMode) {
+        // In dev mode just stop the program
+        process.exit();
+    }
+    // Otherwise waits for the user to press a key
+    keypress(process.stdin);
+    process.stdin.on('keypress', () => {
+        console.log('ici');
+        process.exit();
+    });
+    process.stdin.setRawMode(true);
+    print.info('Press any key to close...');
 }
 
 // Other functions
