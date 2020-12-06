@@ -3,11 +3,13 @@ const constant = {
     PROTOCOL_VERSION: 1, 
     DEFAULT_CONFIG: {
         name: "Wikipath Server",
+        lang: "en",
         maxPlayer: 10,
         firstFinish: true,
-        internet: true,
         destinationInfo: true,
-        fullPage: true
+        fullPage: true,
+        nat: true,
+        ip: null
     },
     CONFIG_PATH: './config.json',
     PORT: 42826,
