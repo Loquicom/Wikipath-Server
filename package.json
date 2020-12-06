@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js",
+    "start": "node main.js --dev",
     "windows": "pkg -o dist/wikipath-server-win-x64 -t node12-win-x64 main.js",
     "linux": "pkg -o dist/wikipath-server-linux-x64 -t node12-linux-x64 main.js",
     "build": "yarn windows && yarn linux"
@@ -19,6 +19,7 @@
     "cli-progress": "^3.8.2",
     "colors": "^1.4.0",
     "follow-redirects": "^1.13.0",
+    "keypress": "^0.2.1",
     "nat-upnp-2": "^3.0.3",
     "portfinder": "^1.0.28",
     "ws": "^7.3.1"
