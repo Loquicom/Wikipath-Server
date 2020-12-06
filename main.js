@@ -48,8 +48,8 @@ async function main() {
     }
     print.info('Generating code');
     await generateCode(natEnabled);
+    print.info('You can stop the server with Ctrl+C or Cmd+.');
     print.info('Server is started');
-    print.info('Stop server with Ctrl+C or Cmd+.');
 }
 
 function stop() {
