@@ -71,7 +71,6 @@ function stop() {
     // Otherwise waits for the user to press a key
     keypress(process.stdin);
     process.stdin.on('keypress', () => {
-        console.log('ici');
         process.exit();
     });
     process.stdin.setRawMode(true);
