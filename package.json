@@ -15,7 +15,7 @@
     "node": ">=12"
   },
   "dependencies": {
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "colors": "^1.4.0",
     "follow-redirects": "^1.13.0",
     "keypress": "^0.2.1",
