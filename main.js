@@ -20,7 +20,7 @@ const devMode = process.argv.length > 2 && process.argv[2] === '--dev';
 
 // Main functions
 async function main() {
-    print.title(`Wikipath Server (Ver ${constant.VERSION})`);
+    print.title(`Wikipath Server V${constant.VERSION} (Protocol version: ${constant.PROTOCOL_VERSION})`);
     // Load config
     print.info('Loading config file');
     config = getConfig();
