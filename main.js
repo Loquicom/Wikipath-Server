@@ -20,7 +20,7 @@ const devMode = process.argv.length > 2 && process.argv[2] === '--dev';
 
 // Main functions
 async function main() {
-    print.title(`Wikipath Server V${constant.VERSION} (Protocol version: ${constant.PROTOCOL_VERSION})`);
+    print.title(`Wikipath Server Ver ${constant.VERSION} (Protocol version: ${constant.PROTOCOL_VERSION})`);
     // Load config
     print.info('Loading config file');
     config = getConfig();
@@ -29,14 +29,16 @@ async function main() {
         process.exit(9);
     }
     print.info('Config file loaded');
-    // Check port
-    print.info('Checking port');
-    const portAvailable = await portIsAvailable(constant.PORT);
-    if (!portAvailable) {
-        print.fatal('Error unable to start server');
-        process.exit(5);
+    // Check port if nat is enabled
+    if (config.nat) {
+        print.info('Checking port');
+        const portAvailable = await portIsAvailable(constant.PORT);
+        if (!portAvailable) {
+            print.fatal('Error unable to start server');
+            process.exit(5);
+        }
+        print.info(`Port ${constant.PORT} available`);
     }
-    print.info(`Port ${constant.PORT} available`);
     // Start server
     print.info('Starting server');
     server.start();
@@ -53,7 +55,7 @@ async function main() {
 }
 
 function stop() {
-    print.info('Stopping server');
+    print.nl().info('Stopping server');
     server.stop();
     // Close port if it is an online game
     if (config.nat) {
