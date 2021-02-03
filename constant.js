@@ -1,5 +1,5 @@
 const constant = {
-    VERSION: '1.0.0',
+    VERSION: '0.2.0',
     PROTOCOL_VERSION: 1, 
     DEFAULT_CONFIG: {
         name: "Wikipath Server",
