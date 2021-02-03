@@ -41,7 +41,7 @@ function list(it, space = 2) {
     }
 }
 
-module.exports = {
+const print = {
     title: title,
     info: info,
     warn: warn,
@@ -50,3 +50,9 @@ module.exports = {
     important: important,
     list: list
 }
+print.nl = function () {
+    console.info('');
+    return print;
+}
+
+module.exports = print;
