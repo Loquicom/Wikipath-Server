@@ -30,15 +30,13 @@ async function main() {
     }
     print.info('Config file loaded');
     // Check port if nat is enabled
-    if (config.nat) {
-        print.info('Checking port');
-        const portAvailable = await portIsAvailable(constant.PORT);
-        if (!portAvailable) {
-            print.fatal('Error unable to start server');
-            process.exit(5);
-        }
-        print.info(`Port ${constant.PORT} available`);
+    print.info('Checking port');
+    const portAvailable = await portIsAvailable(constant.PORT);
+    if (!portAvailable) {
+        print.fatal('Error unable to start server');
+        process.exit(5);
     }
+    print.info(`Port ${constant.PORT} available`);
     // Start server
     print.info('Starting server');
     server.start();
