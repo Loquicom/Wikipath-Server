@@ -1,30 +1,38 @@
 const colors = require('colors');
 
+function indentation(nb) {
+    let str = '';
+    for(let i = 0; i < nb; i++) {
+        str += '  ';
+    }
+    return str;
+}
+
 function title(str) {
     console.info(str.bold.underline.italic.brightBlue);
 }
 
-function info(str) {
-    console.info('>'.bold.green, str.bold);
+function info(str, indent = 0) {
+    console.info(`${indentation(indent)}>`.bold.green, str.bold);
 }
 
-function warn(str) {
-    console.log('>'.bold.yellow, str.bold);
+function warn(str, indent = 0) {
+    console.log(`${indentation(indent)}>`.bold.yellow, str.bold);
 }
     
-function error(str) {
-    console.error('>'.bold.red, str.bold);
+function error(str, indent = 0) {
+    console.error(`${indentation(indent)}>`.bold.red, str.bold);
 }
 
-function fatal(str) {
-    console.error(`> ${str}`.bold.bgBrightRed.white)
+function fatal(str, indent = 0) {
+    console.error(`${indentation(indent)}> ${str}`.bold.bgBrightRed.white)
 }
 
 function important(str) {
     console.info('  ==>'.bold.magenta, str.bold, '<==  '.bold.magenta);
 }
     
-function list(it, space = 2) {
+function list(it, space = 2, indent = 0) {
     // Generate blank
     let blank = '';
     for(let i = 0; i<space; i++) {
@@ -33,9 +41,9 @@ function list(it, space = 2) {
     //Print content
     for (const prop in it) {
         if (typeof it[prop] === 'string') {
-            console.info(`${blank}->`.bold.blue, it[prop].bold);
+            console.info(`${indentation(indent)}${blank}->`.bold.blue, it[prop].bold);
         } else if (typeof it[prop] === 'object') {
-            console.info(`${blank}=>`.bold.blue, `${prop}:`.bold);
+            console.info(`${indentation(indent)}${blank}=>`.bold.blue, `${prop}:`.bold);
             list(it[prop], space + 2);
         }
     }
