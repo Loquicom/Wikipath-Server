@@ -85,7 +85,7 @@ function getConfig() {
         return file.loadJson(constant.CONFIG_PATH);
     } else {
         // File not exist, create config file
-        print.info('Config file not found, generation of a new config file');
+        print.info('Config file not found, generation of a new config file', 1);
         if(!file.writeJson(constant.CONFIG_PATH, constant.DEFAULT_CONFIG)) {
             return false;
         }
@@ -134,15 +134,15 @@ async function enableNat() {
 async function getIp(natEnabled) {
     // Get external IP if nat is enabled
     if (natEnabled) {
-        print.info('Retrieving the IP');
+        print.info('Retrieving the IP', 1);
         const ip = await nat.getExternalIp();
         if (ip) {
             return ip;
         }
-        print.warn('Unable to retrieving the IP');
+        print.warn('Unable to retrieving the IP', 1);
     }
     // Get ip from the config file
-    print.info('Get IP from config file');
+    print.info('Get IP from config file', 1);
     return config.ip;
 }
 
@@ -150,19 +150,19 @@ async function generateCode(natEnabled) {
     // Get ip
     const ip = await getIp(natEnabled);
     // Show information
-    print.info('You can connect with the code or an IP');
+    print.info('You can connect with the code or an IP', 1);
     if (natEnabled) {
-        print.info('You can use one of yours internals (local) IP or your external IP');
+        print.info('You can use one of yours internals (local) IP or your external IP', 1);
         if (ip) {
-            print.info(`Your external IP is ${ip}`);
+            print.info(`Your external IP is ${ip}`, 1);
         } else {
-            print.info('You can find your external IP in IPv4 on https://www.whatismyip.com');
+            print.info('You can find your external IP in IPv4 on https://www.whatismyip.com', 1);
         }
     } else {
-        print.info('You can use one of yours internals (local) IP');
+        print.info('You can use one of yours internals (local) IP', 1);
     }
-    print.info('Yours internals IP are:');
-    print.list(nat.getInternalIps());
+    print.info('Yours internals IP are:', 1);
+    print.list(nat.getInternalIps(), 1);
     // Generate code
     if (!ip) {
         print.warn('Unable to generate code, no IP');
